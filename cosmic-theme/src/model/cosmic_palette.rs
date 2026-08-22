@@ -84,7 +84,7 @@ impl CosmicPalette {
 impl Default for CosmicPalette {
     #[inline]
     fn default() -> Self {
-        CosmicPalette::Dark(Default::default())
+        CosmicPalette::Light(Default::default())
     }
 }
 

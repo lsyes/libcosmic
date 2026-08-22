@@ -45,7 +45,7 @@ pub static TRANSPARENT_COMPONENT: LazyLock<Component> = LazyLock::new(|| Compone
 });
 
 pub(crate) static THEME: Mutex<Theme> = Mutex::new(Theme {
-    theme_type: ThemeType::Dark,
+    theme_type: ThemeType::Light,
     layer: cosmic_theme::Layer::Background,
     transparent: false,
     list_item_position: None,
@@ -118,11 +118,11 @@ pub fn system_light() -> Theme {
 /// Loads the preferred system theme from `cosmic-config`.
 pub fn system_preference() -> Theme {
     let Ok(mode_config) = ThemeMode::config() else {
-        return Theme::dark();
+        return Theme::light();
     };
 
     let Ok(is_dark) = ThemeMode::is_dark(&mode_config) else {
-        return Theme::dark();
+        return Theme::light();
     };
     if is_dark {
         system_dark()
@@ -135,8 +135,8 @@ pub fn system_preference() -> Theme {
 #[derive(Debug, Clone, PartialEq, Default)]
 pub enum ThemeType {
     #[default]
-    Dark,
     Light,
+    Dark,
     HighContrastDark,
     HighContrastLight,
     Custom(Arc<CosmicTheme>),

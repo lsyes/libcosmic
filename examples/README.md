@@ -41,6 +41,15 @@ Demonstrates how to use the context menu widget.
 just run context-menu
 ```
 
+## `hello-world`
+
+Minimal "你好，世界" (Hello, World) application built with libcosmic's
+application API. A good starting point to see the structure of a COSMIC app.
+
+```sh
+just run hello-world
+```
+
 ## `image-button`
 
 Demonstrates how to use the image-button widget.

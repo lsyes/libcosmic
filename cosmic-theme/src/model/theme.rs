@@ -806,12 +806,15 @@ impl Theme {
         if let Ok(cmd) = cmd {
             let color_scheme = String::from_utf8_lossy(&cmd.stdout);
 
-            if color_scheme.trim().contains("default") || color_scheme.trim().contains("light") {
-                return Self::light_default();
+            if color_scheme.trim().contains("dark") {
+                return Self::dark_default();
             }
+
+            // "default" and "prefer-light" both map to the light theme
+            return Self::light_default();
         }
 
-        Self::dark_default()
+        Self::light_default()
     }
 
     /// check current desktop environment and preferred color scheme and set it as default
@@ -824,7 +827,7 @@ impl Theme {
             return Self::gtk_prefer_colorscheme();
         }
 
-        Self::dark_default()
+        Self::light_default()
     }
 }
 
@@ -922,7 +925,7 @@ pub struct ThemeBuilder {
 impl Default for ThemeBuilder {
     fn default() -> Self {
         Self {
-            palette: DARK_PALETTE.to_owned(),
+            palette: LIGHT_PALETTE.to_owned(),
             spacing: Spacing::default(),
             corner_radii: CornerRadii::default(),
             neutral_tint: Default::default(),

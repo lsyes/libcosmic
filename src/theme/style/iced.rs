@@ -1637,8 +1637,8 @@ impl combo_box::Catalog for Theme {}
 impl Base for Theme {
     fn default(preference: iced::theme::Mode) -> Self {
         match preference {
-            iced::theme::Mode::Light => Theme::light(),
-            iced::theme::Mode::Dark | iced::theme::Mode::None => Theme::dark(),
+            iced::theme::Mode::Light | iced::theme::Mode::None => Theme::light(),
+            iced::theme::Mode::Dark => Theme::dark(),
         }
     }
 

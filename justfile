@@ -1,4 +1,4 @@
-examples := 'applet application calendar config context-menu cosmic image-button menu multi-window nav-context open-dialog table-view'
+examples := 'applet application calendar config context-menu cosmic hello-world image-button menu multi-window nav-context open-dialog table-view'
 clippy_args := '-W clippy::all -W clippy::pedantic'
 
 # Check for errors and linter warnings
