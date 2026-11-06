@@ -5,7 +5,7 @@ use std::collections::HashMap;
 
 /// Request a list of GPUs from from switcherooctl.
 pub async fn enumerate(system_conn: &zbus::Connection) -> Option<impl Iterator<Item = Descriptor>> {
-    let proxy = switcheroo_control::SwitcherooControlProxy::new(system_conn)
+    let proxy = switcheroo_control_zbus::SwitcherooControlProxy::new(system_conn)
         .await
         .ok()?;
 
@@ -67,21 +67,30 @@ impl Preference {
 
     /// Select the GPU override to launch with.
     pub fn select(self, gpus: &[Descriptor]) -> Option<usize> {
-        if let Self::Id(id) = self {
-            return Some(id);
-        }
+        match self {
+            // Do not set env var with a default preference
+            Self::Default => None,
 
-        if matches!(self, Preference::Default) {
-            return None;
-        }
+            // Set env var only if the manual ID override is not the default GPU
+            Self::Id(manual_id) => {
+                if Some(manual_id) == gpus.iter().position(|gpu| gpu.default) {
+                    None
+                } else {
+                    Some(manual_id)
+                }
+            }
 
-        let default_discrete = gpus.iter().position(|gpu| gpu.default && gpu.discrete);
-        if default_discrete.is_some() {
-            return None;
-        }
+            // Set either the first non-default discrete GPU or the first non-default GPU.
+            Self::NonDefault => {
+                let default_discrete = gpus.iter().position(|gpu| gpu.default && gpu.discrete);
+                if default_discrete.is_some() {
+                    return None;
+                }
 
-        let non_default_discrete = gpus.iter().position(|gpu| gpu.discrete);
-        let non_default = || gpus.iter().position(|gpu| !gpu.default);
-        non_default_discrete.or_else(non_default)
+                let non_default_discrete = gpus.iter().position(|gpu| gpu.discrete);
+                let non_default = || gpus.iter().position(|gpu| !gpu.default);
+                non_default_discrete.or_else(non_default)
+            }
+        }
     }
 }
